@@ -7,7 +7,6 @@ void initMemory(){
     freeList = (Block*)pool;
 
     Block *current = freeList;
-    std::cout<<current<<std::endl;
 
     size_t num_blocks = MEMORY_POOL_SIZE/sizeof(Block) - 1;
 
@@ -20,16 +19,32 @@ void initMemory(){
 
 void *allocateFixedSizeMemory(){
 
-    return nullptr;
+    if(freeList == nullptr){
+        std::cout<<"[Error : ]"<<"Memory pool exhausted"<<std::endl;
+        return nullptr;
+    }
+
+    Block *current = freeList;
+    freeList = freeList->next;
+    return (void *)current;
 }
 
 void freeFixedSizeMemory(void *ptr){
-    return;
+    
+    if(ptr == nullptr){
+        std::cout<<"[Error : ]"<<"Invalid memory pointer"<<std::endl;
+        return;
+    }
+
+    Block *current = (Block*)ptr;
+    current->next = freeList;
+    freeList = current;
+
 }
 
 int main(){
 
-    initMemory();
+
 
     return 0;
 }
