@@ -1,6 +1,4 @@
 #include "fixed_memory.h"
-#include <iostream>
-
 
 void initMemory(){
 
