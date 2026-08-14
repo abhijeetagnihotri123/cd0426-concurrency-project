@@ -1,14 +1,16 @@
 #include "variable_memory.h"
 
-Block *freeList = nullptr;
+VariableMemory::VariableMemory(){
+    init_memory();
+}
 
-void init_variable_memory(){
-    freeList = (Block*)pool;
+void VariableMemory::init_memory(){
+    freeList = (Block*)pool_variable;
     freeList->size = MEMORY_POOL_SIZE - sizeof(Block*);
     freeList->next = nullptr;
 }
 
-void *allocateVariableSizedMemory(size_t size){
+void *VariableMemory::allocate_memory(size_t size){
 
     if(freeList == nullptr){
         std::cout<<"[Error : Memory pool exhausted]\n";
@@ -42,7 +44,7 @@ void *allocateVariableSizedMemory(size_t size){
     return current;
 }
 
-void freeVariableSizedMemory(void *ptr){
+void VariableMemory::free_memory(void *ptr){
     if(ptr == nullptr){
         std::cout<<"[Error : invalid pointer variable]\n";
     }
@@ -51,32 +53,24 @@ void freeVariableSizedMemory(void *ptr){
     freeList = current;
 }
 
-struct Data{
-    int x,y;
-};
+VariableMemory::~VariableMemory(){
+    this->freeList = nullptr;
+}
+
+#if 0
 
 int main(){
 
-    init_variable_memory();
+    Memory *m = new VariableMemory();
+    m->init_memory();
+    int *ptr = (int *)m->allocate_memory(sizeof(int));
 
-    int *ptr = (int *)allocateVariableSizedMemory(sizeof(int));
-    
     if(ptr != nullptr){
-        *ptr = 35;
-        std::cout<<"Allocator is working : "<<ptr<<" -> "<<*ptr<<std::endl;
-        freeVariableSizedMemory((void *)ptr);
+        *ptr = 132;
+        std::cout<<ptr<<" "<<*ptr<<std::endl;
+        m->free_memory((void *)ptr);
     }
-
-    Data *d = (Data *)allocateVariableSizedMemory(sizeof(Data));
-
-    if(d != nullptr){
-        d->x = 132;
-        d->y = 264;
-        std::cout<<"Allocator for Data struct : ["<<d<<","<<d->x<<","<<d->y<<"]\n";
-        freeVariableSizedMemory((void *)d);
-    }
-
-    
 
     return 0;
 }
+#endif

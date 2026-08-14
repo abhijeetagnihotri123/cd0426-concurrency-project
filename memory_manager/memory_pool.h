@@ -1,5 +1,4 @@
-#define MEMORY_POOL_SIZE 1024
 #include <iostream>
-unsigned char pool[MEMORY_POOL_SIZE];
-
-
+#define MEMORY_POOL_SIZE 1024
+// inline unsigned char pool_fixed[MEMORY_POOL_SIZE];
+// inline unsigned char pool_variable[MEMORY_POOL_SIZE];
