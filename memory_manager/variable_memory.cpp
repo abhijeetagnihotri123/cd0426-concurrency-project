@@ -41,7 +41,7 @@ void *VariableMemory::allocate_memory(size_t size){
     else{
         prev->next = current->next;
     }
-    return current;
+    return (void *)((unsigned char*)current + sizeof(Block));
 }
 
 bool VariableMemory::free_memory(void *ptr){
@@ -49,9 +49,22 @@ bool VariableMemory::free_memory(void *ptr){
         std::cout<<"[Error : invalid pointer variable]\n";
         return false;
     }
-    Block *current = (Block*)ptr;
+    Block *current = (Block*)((unsigned char *)ptr - sizeof(Block));
     current->next = freeList;
     freeList = current;
+
+    while(current != nullptr && (current->next) != nullptr){
+
+        if((unsigned char *)(current + sizeof(Block) + current->size) == (unsigned char *)current->next){
+
+            current->size += current->next->size + sizeof(Block); 
+            current->next = current->next->next;
+        }
+        else{
+            current = current->next;
+        }
+    }
+
     return true;
 }
 

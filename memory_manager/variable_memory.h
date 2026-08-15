@@ -3,7 +3,7 @@
 #define VARIABLE_MEMORY_H
 
 #include "memory.h"
-inline unsigned char pool_variable[MEMORY_POOL_SIZE];
+unsigned char pool_variable[MEMORY_POOL_SIZE];
 
 class VariableMemory : public Memory{
 
