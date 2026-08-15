@@ -1,5 +1,6 @@
 #include "fixed_memory.h"
 #include "variable_memory.h"
+#include <cassert>
 
 using namespace std;
 
@@ -28,7 +29,7 @@ void Driver::free_memory(void *ptr){
 }
 
 Driver::~Driver(){
-    m->~Memory();
+    this->m->~Memory();
 }
 
 struct Data{
@@ -81,6 +82,9 @@ int main(){
     }
     d.free_memory((void*)ptr);
     d.free_memory((void*)data_ptr);
+
+
+
     
 
     return 0;

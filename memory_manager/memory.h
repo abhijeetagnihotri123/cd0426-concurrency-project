@@ -11,7 +11,7 @@ public:
     Memory(){}
     virtual void init_memory(void) = 0;
     virtual void *allocate_memory(size_t) = 0;
-    virtual void free_memory(void *) = 0;
+    virtual bool free_memory(void *) = 0;
     virtual ~Memory(){};
 };
 

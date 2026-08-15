@@ -44,13 +44,15 @@ void *VariableMemory::allocate_memory(size_t size){
     return current;
 }
 
-void VariableMemory::free_memory(void *ptr){
+bool VariableMemory::free_memory(void *ptr){
     if(ptr == nullptr){
         std::cout<<"[Error : invalid pointer variable]\n";
+        return false;
     }
     Block *current = (Block*)ptr;
     current->next = freeList;
     freeList = current;
+    return true;
 }
 
 VariableMemory::~VariableMemory(){

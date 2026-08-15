@@ -20,7 +20,7 @@ public:
     VariableMemory(void);
     void init_memory();
     void *allocate_memory(size_t);
-    void free_memory(void*);
+    bool free_memory(void*);
     ~VariableMemory();
 
 };
