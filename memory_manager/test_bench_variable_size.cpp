@@ -54,10 +54,10 @@ int main(){
 
     Memory *m = new VariableMemory();
     
-    //test1(m);
-    //test2(m);
-    //test3(m);
-    //test4(m);
+    // test1(m);
+    // test2(m);
+    // test3(m);
+    // test4(m);
     
     return 0;
 }

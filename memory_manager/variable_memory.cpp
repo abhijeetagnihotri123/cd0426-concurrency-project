@@ -15,6 +15,8 @@ void VariableMemory::init_memory(){
 
 void *VariableMemory::allocate_memory(size_t size){
 
+    std::lock_guard<std::mutex>lock(this->mtx);
+
     if(freeList == nullptr){
         std::cout<<"[Error : Memory pool exhausted]\n";
         return nullptr;
@@ -49,12 +51,13 @@ void *VariableMemory::allocate_memory(size_t size){
 }
 
 bool VariableMemory::free_memory(void *ptr){
+    
+    std::lock_guard<std::mutex>lock(this->mtx);
     if(ptr == nullptr){
         std::cout<<"[Error : invalid pointer variable]\n";
         return false;
     }
     
-
     uintptr_t ptr_val = reinterpret_cast<uintptr_t>(ptr);
     uintptr_t base_val = reinterpret_cast<uintptr_t>(first_pointer_boundary);
     uintptr_t end_val = reinterpret_cast<uintptr_t>(last_pointer_boundary);
