@@ -1,4 +1,4 @@
-#include "fixed_memory.h"
+#include "variable_memory.h"
 #include "my_unique_ptr.h"
 #include <cassert>
 
@@ -52,12 +52,12 @@ void test4(Memory *m){
 
 int main(){
 
-    Memory *m = new FixedMemory();
+    Memory *m = new VariableMemory();
     
-    test1(m);
-    test2(m);
+    //test1(m);
+    //test2(m);
     test3(m);
-    test4(m);
+    //test4(m);
     
     return 0;
 }

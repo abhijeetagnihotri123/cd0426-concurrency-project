@@ -15,7 +15,7 @@ void FixedMemory::init_memory(){
     this->first_pointer_boundary = freeList;
 
     for(int i = 0 ; i < num_blocks ; i++){
-        current->canary = PREDEFINED_CANARY_VALUE;
+        current->canary = PREDEFINED_CANARY;
         current->next = (Block*)((unsigned char *)current + sizeof(Block));
         current = current->next;
     }
@@ -58,7 +58,7 @@ bool FixedMemory::free_memory(void *ptr){
 
     Block *current = (Block*)ptr;
     
-    if(current->canary != PREDEFINED_CANARY_VALUE){
+    if(current->canary != PREDEFINED_CANARY){
         std::cout<<"[Error : ] "<<"Corrupted memory as canaries don't match reseting memory"<<std::endl;
         init_memory();
         return false;

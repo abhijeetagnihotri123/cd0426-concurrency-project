@@ -1,8 +1,7 @@
 #ifndef FIXED_MEMORY_H
 #define FIXED_MEMORY_H
 #include "memory.h"
-#include <stdint.h>
-#define PREDEFINED_CANARY_VALUE 0xDEADBEEFDEADBEEF
+
 
 class FixedMemory : public Memory{
 

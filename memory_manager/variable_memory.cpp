@@ -6,8 +6,11 @@ VariableMemory::VariableMemory(){
 
 void VariableMemory::init_memory(){
     freeList = (Block*)pool_variable;
+    this->first_pointer_boundary = freeList;
     freeList->size = MEMORY_POOL_SIZE - sizeof(Block*);
     freeList->next = nullptr;
+    freeList->canary = PREDEFINED_CANARY;
+    this->last_pointer_boundary = (Block*)((unsigned char *)freeList +  freeList->size);
 }
 
 void *VariableMemory::allocate_memory(size_t size){
@@ -41,6 +44,7 @@ void *VariableMemory::allocate_memory(size_t size){
     else{
         prev->next = current->next;
     }
+    current->canary = PREDEFINED_CANARY;
     return (void *)((unsigned char*)current + sizeof(Block));
 }
 
@@ -49,14 +53,30 @@ bool VariableMemory::free_memory(void *ptr){
         std::cout<<"[Error : invalid pointer variable]\n";
         return false;
     }
+    
+
+    uintptr_t ptr_val = reinterpret_cast<uintptr_t>(ptr);
+    uintptr_t base_val = reinterpret_cast<uintptr_t>(first_pointer_boundary);
+    uintptr_t end_val = reinterpret_cast<uintptr_t>(last_pointer_boundary);
+
+    bool is_aligned = ((ptr_val - base_val)%sizeof(Block) == 0);
+
+    if(ptr_val < base_val || ptr_val > end_val || !is_aligned){
+        std::cout<<"[Error : ] "<<"Invalid unaligned pointer value\n";
+        return false;
+    }
+
     Block *current = (Block*)((unsigned char *)ptr - sizeof(Block));
+
+    if(current->canary != PREDEFINED_CANARY){
+        std::cout<<"[Error : corrupted memory block]\n";
+        return false;
+    }
+
     current->next = freeList;
     freeList = current;
-
     while(current != nullptr && (current->next) != nullptr){
-
         if((unsigned char *)(current + sizeof(Block) + current->size) == (unsigned char *)current->next){
-
             current->size += current->next->size + sizeof(Block); 
             current->next = current->next->next;
         }
@@ -64,28 +84,9 @@ bool VariableMemory::free_memory(void *ptr){
             current = current->next;
         }
     }
-
     return true;
 }
 
 VariableMemory::~VariableMemory(){
-    this->freeList = nullptr;
+    init_memory();
 }
-
-#if 0
-
-int main(){
-
-    Memory *m = new VariableMemory();
-    m->init_memory();
-    int *ptr = (int *)m->allocate_memory(sizeof(int));
-
-    if(ptr != nullptr){
-        *ptr = 132;
-        std::cout<<ptr<<" "<<*ptr<<std::endl;
-        m->free_memory((void *)ptr);
-    }
-
-    return 0;
-}
-#endif

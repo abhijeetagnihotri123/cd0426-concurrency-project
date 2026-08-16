@@ -3,17 +3,20 @@
 #define VARIABLE_MEMORY_H
 
 #include "memory.h"
-unsigned char pool_variable[MEMORY_POOL_SIZE];
 
 class VariableMemory : public Memory{
 
 private:
 struct Block{
+    u_int64_t canary;
     size_t size;
     Block *next;
 };
 
+alignas(64)unsigned char pool_variable[MEMORY_POOL_SIZE];
 Block *freeList = nullptr;
+Block *first_pointer_boundary;
+Block *last_pointer_boundary;
 
 public:
 

@@ -1,9 +1,8 @@
-
-#include "memory_pool.h"
-
 #ifndef MEMORY_H
 #define MEMORY_H
 
+#include "memory_pool.h"
+#include <stdint.h>
 
 class Memory{
 
