@@ -83,9 +83,5 @@ int main(){
     d.free_memory((void*)ptr);
     d.free_memory((void*)data_ptr);
 
-
-
-    
-
     return 0;
 }
