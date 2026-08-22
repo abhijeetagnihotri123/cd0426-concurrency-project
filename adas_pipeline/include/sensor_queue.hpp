@@ -1,3 +1,6 @@
+#ifndef SENSOR_QUEUE_HPP
+#define SENSOR_QUEUE_HPP
+
 #include "sensor_frame.hpp"
 
 #include <mutex>
@@ -11,7 +14,7 @@ class sensor_queue{
 
 private:
     static constexpr int capacity = 16;
-    std::array<adas::SensorFrame , capacity>buffer{};
+    std::array<adas::SensorFrame* , capacity>buffer{};
     std::mutex mtx;
     std::condition_variable cv;
 
@@ -23,8 +26,9 @@ public:
     sensor_queue() = default;
     ~sensor_queue() = default;
 
-    bool push(const adas::SensorFrame);
-    adas::SensorFrame pop(std::chrono::milliseconds);
+    bool push(adas::SensorFrame*);
+    adas::SensorFrame* pop(std::chrono::milliseconds);
     void display_queue(void);
 };
 
+#endif

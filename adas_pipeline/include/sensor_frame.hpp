@@ -1,8 +1,11 @@
-#pragma once
+#ifndef SENSOR_FRAME_HPP
+#define SENSOR_FRAME_HPP
 
 #include <cstdint>
 #include <chrono>
 #include <iostream>
+#include <atomic>
+#include <thread>
 
 namespace adas{
 
@@ -42,3 +45,5 @@ namespace adas{
     };
 
 }
+
+#endif
