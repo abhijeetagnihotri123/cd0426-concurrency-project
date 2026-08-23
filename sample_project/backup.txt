@@ -1,0 +1,35 @@
+CXX = g++
+CXXFLAGS = -Wall -Wextra -Iinclude
+
+# Directories
+SRC_DIR = src
+INC_DIR = include
+OBJ_DIR = obj
+BIN_DIR = bin
+
+# Target executable name
+TARGET = $(BIN_DIR)/program
+
+# Automatically find source files and map them to object files
+SRCS = $(wildcard $(SRC_DIR)/*.cpp)
+OBJS = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRCS))
+
+# Default target
+all: $(TARGET)
+
+# Links object files into the final binary executable
+$(TARGET): $(OBJS) | $(BIN_DIR)
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+# Compiles .cpp source files into .o object files
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Safely creates build output folders if they do not exist
+$(BIN_DIR) $(OBJ_DIR):
+	mkdir -p $@
+
+# Cleans up temporary object files and binaries
+.PHONY: clean
+clean:
+# 	rm -rf $(OBJ_DIR) $(BIN_DIR)
