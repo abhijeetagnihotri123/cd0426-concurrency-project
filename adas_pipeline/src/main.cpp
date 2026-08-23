@@ -1,7 +1,46 @@
 #include "sensor_queue.hpp"
 #include "sensor_producers.hpp"
 #include "control_loop.hpp"
+#include "FixedBlockAllocator.hpp"
 
+using namespace Memory_Allocator;
+using namespace adas;
+
+int main(){
+
+    FixedBlockAllocator fa;
+
+    SensorFrame *frame1 = (SensorFrame *)fa.my_malloc();
+    SensorFrame *frame2 = (SensorFrame *)fa.my_malloc();
+    SensorFrame *frame3 = (SensorFrame *)fa.my_malloc();
+    SensorFrame *frame4 = (SensorFrame *)fa.my_malloc();
+    SensorFrame *frame5 = (SensorFrame *)fa.my_malloc();
+
+    frame1->type = SensorType::Camera;
+    frame1->distance = 119.9;
+    frame1->relative_velocity = 90.9;
+    frame1->frame_id = 1;
+    frame1->time_now = std::chrono::high_resolution_clock::now();
+
+    std::cout<<*(frame1)<<std::endl;
+    std::cout<<(frame1)<<std::endl;
+    std::cout<<(frame2)<<std::endl;
+    std::cout<<(frame3)<<std::endl;
+    std::cout<<(frame4)<<std::endl;
+    std::cout<<(frame5)<<std::endl;
+    
+
+    fa.my_free((void *)frame1);
+    fa.my_free((void *)frame2);
+    fa.my_free((void *)frame3);
+    fa.my_free((void *)frame4);
+    fa.my_free((void *)frame5);
+
+    return 0;
+}
+
+
+#if 0
 
 int main(){
 
@@ -24,6 +63,10 @@ int main(){
     t4.join();
 
     std::cout<<"Graceful shutdown of adas system\n";
+    
 
     return 0;
 }
+
+
+#endif

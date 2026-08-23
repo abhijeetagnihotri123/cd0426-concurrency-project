@@ -10,11 +10,9 @@
 namespace adas{
 
     enum class SensorType{
-
         Camera = 0,
         LiDar,
         Radar
-
     };
 
     struct SensorFrame{
