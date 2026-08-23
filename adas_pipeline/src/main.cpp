@@ -3,8 +3,7 @@
 #include "control_loop.hpp"
 #include "FixedBlockAllocator.hpp"
 
-using namespace Memory_Allocator;
-using namespace adas;
+#if 0
 
 int main(){
 
@@ -40,8 +39,7 @@ int main(){
 }
 
 
-#if 0
-
+#endif
 int main(){
 
     std::atomic<bool>running;
@@ -49,10 +47,12 @@ int main(){
 
     sensor_queue queue;
 
-    std::thread t1(sensor_data_producers::lidar_producers , std::ref(queue) , std::ref(running));
-    std::thread t2(sensor_data_producers::radar_producers , std::ref(queue) , std::ref(running));
-    std::thread t3(sensor_data_producers::camera_producers, std::ref(queue) , std::ref(running));
-    std::thread t4(sensor_data_consumer::consumer_sensor  , std::ref(queue) , std::ref(running));
+    Memory_Allocator::FixedBlockAllocator *fa = new Memory_Allocator::FixedBlockAllocator();
+
+    std::thread t1(sensor_data_producers::lidar_producers , fa , std::ref(queue) , std::ref(running));
+    std::thread t2(sensor_data_producers::radar_producers , fa , std::ref(queue) , std::ref(running));
+    std::thread t3(sensor_data_producers::camera_producers, fa , std::ref(queue) , std::ref(running));
+    std::thread t4(sensor_data_consumer::consumer_sensor  , fa , std::ref(queue) , std::ref(running));
 
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
     running.store(false);
@@ -67,6 +67,3 @@ int main(){
 
     return 0;
 }
-
-
-#endif
