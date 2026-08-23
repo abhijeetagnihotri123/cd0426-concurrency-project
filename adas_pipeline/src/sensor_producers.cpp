@@ -8,7 +8,7 @@ namespace sensor_data_producers{
         while(running.load()){
             // adas::SensorFrame *frame = new adas::SensorFrame;
             adas::SensorFrame *frame = (adas::SensorFrame*)fa->my_malloc();
-            auto next_wake = std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(500);
+            auto next_wake = std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(100);
             if(frame != nullptr)
             {
                 frame->type = adas::SensorType::LiDar;
@@ -27,7 +27,7 @@ namespace sensor_data_producers{
         int id = 0;
         while(running.load()){
             adas::SensorFrame *frame = (adas::SensorFrame*)fa->my_malloc();
-            auto next_wake = std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(400);
+            auto next_wake = std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(80);
             if(frame != nullptr)
             {
                 frame->type = adas::SensorType::Radar;
@@ -46,7 +46,7 @@ namespace sensor_data_producers{
         int id = 0;
         while(running.load()){
             adas::SensorFrame *frame = (adas::SensorFrame*)fa->my_malloc();
-            auto next_wake = std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(300);
+            auto next_wake = std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(60);
             if(frame != nullptr)
             {
                 frame->type = adas::SensorType::Camera;
