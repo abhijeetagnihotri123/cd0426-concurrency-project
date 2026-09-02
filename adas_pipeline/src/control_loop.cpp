@@ -62,7 +62,7 @@ namespace sensor_data_consumer{
         }
     }
 
-    void consumer_sensor_lf(Memory_Allocator::FixedBlockAllocator *fa , sensor_queue_lockfree &queue , std::atomic<bool>&running){
+    void consumer_sensor_lf(Memory_Allocator_LockFree::FixedBlockAllocator_LockFree *fa , sensor_queue_lockfree &queue , std::atomic<bool>&running){
         
         constexpr float CRITICAL_TTC_THRESHOLD = 6.6f;
         constexpr auto STALE_THRESHOLD = std::chrono::milliseconds(75);

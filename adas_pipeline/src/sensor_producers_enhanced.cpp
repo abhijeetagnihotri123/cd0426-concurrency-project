@@ -1,8 +1,8 @@
-#include "sensor_producers.hpp"
+#include "sensor_producers_enhanced.hpp"
 
-namespace sensor_data_producers{
- 
-    void lidar_producers(Memory_Allocator::FixedBlockAllocator *fa , sensor_queue &queue , std::atomic<bool>&running){
+namespace sensor_data_producers_enhanced{
+
+    void lidar_producers_lf(Memory_Allocator_LockFree::FixedBlockAllocator_LockFree *fa , sensor_queue_lockfree &queue , std::atomic<bool>&running){
 
         int id = 0;
         while(running.load()){
@@ -22,7 +22,7 @@ namespace sensor_data_producers{
         }
     }
 
-    void radar_producers(Memory_Allocator::FixedBlockAllocator *fa , sensor_queue &queue , std::atomic<bool>&running){
+    void radar_producers_lf(Memory_Allocator_LockFree::FixedBlockAllocator_LockFree *fa , sensor_queue_lockfree &queue , std::atomic<bool>&running){
 
         int id = 0;
         while(running.load()){
@@ -41,7 +41,7 @@ namespace sensor_data_producers{
         }
     }
 
-    void camera_producers(Memory_Allocator::FixedBlockAllocator *fa , sensor_queue &queue , std::atomic<bool>&running){
+    void camera_producers_lf(Memory_Allocator_LockFree::FixedBlockAllocator_LockFree *fa , sensor_queue_lockfree &queue , std::atomic<bool>&running){
 
         int id = 0;
         while(running.load()){

@@ -2,7 +2,9 @@
 
 namespace Memory_Allocator_LockFree{
 
-
+    FixedBlockAllocator_LockFree::FixedBlockAllocator_LockFree(void){
+        init_memory();
+    }
 
     void FixedBlockAllocator_LockFree::init_memory(void){
 
@@ -29,18 +31,62 @@ namespace Memory_Allocator_LockFree{
     }
 
     void *FixedBlockAllocator_LockFree::my_malloc(void){
-        return nullptr;
+        Block *front = front_.load(std::memory_order_acquire);
+        Block *rear = rear_.load(std::memory_order_acquire);
+
+        if(front == nullptr){
+            std::cout<<"[Error] : memory pool exhausted\n";
+            return nullptr;
+        }
+        Block *block = front;
+
+        if(front == rear){
+            front = rear = nullptr;
+        }
+        else{
+            front = front->next;
+        }
+
+        front_.store(front , std::memory_order_release);
+        rear_.store(rear , std::memory_order_release);
+
+        return (void *)((unsigned char *)block + sizeof(Block));
     }
 
     void FixedBlockAllocator_LockFree::my_free(void *ptr){
 
+        if(ptr == nullptr){
+            std::cout<<"[Error] : Null pointer cannot be accepted back\n";
+            return;
+        }
+
+        Block *block = (Block*)((unsigned char *)ptr - sizeof(Block));
+        if(block->canary != CANARY_VALUE){
+            std::cout<<"[Error :] Corrupted memory reinitialising memory pool\n";
+            init_memory();
+            return;
+        }
+
+        block->next = nullptr;
+
+        Block *front = front_.load(std::memory_order_acquire);
+        Block *rear = rear_.load(std::memory_order_acquire);
+
+        if(front == nullptr){
+            front = rear = block;
+        }
+        else{
+            rear->next = block;
+            rear = block;
+        }
+
+        front_.store(front , std::memory_order_release);
+        rear_.store(rear , std::memory_order_release);
     }
 
     FixedBlockAllocator_LockFree::~FixedBlockAllocator_LockFree(void){
-
         front_.store(nullptr , std::memory_order_release);
         rear_.store(nullptr , std::memory_order_release);
-
     }
 
 }

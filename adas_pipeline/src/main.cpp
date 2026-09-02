@@ -1,6 +1,7 @@
 #include "sensor_queue.hpp"
 #include "sensor_queue_lockfree.hpp"
 #include "sensor_producers.hpp"
+#include "sensor_producers_enhanced.hpp"
 #include "control_loop.hpp"
 #include "FixedBlockAllocator.hpp"
 
@@ -64,13 +65,23 @@ int main(){
         // t3.join();
         // t4.join();
 
+    // sensor_queue queue;
+
+    // Memory_Allocator::FixedBlockAllocator *fa = new Memory_Allocator::FixedBlockAllocator();
+
+    // std::thread t1(sensor_data_producers::lidar_producers , fa , std::ref(queue) , std::ref(running));
+    // std::thread t2(sensor_data_producers::radar_producers , fa , std::ref(queue) , std::ref(running));
+    // std::thread t3(sensor_data_producers::camera_producers, fa , std::ref(queue) , std::ref(running));
+    // std::thread t4(sensor_data_consumer::consumer_sensor  , fa , std::ref(queue) , std::ref(running));
+
+
     sensor_queue_lockfree queue;
 
-    Memory_Allocator::FixedBlockAllocator *fa = new Memory_Allocator::FixedBlockAllocator();
+    Memory_Allocator_LockFree::FixedBlockAllocator_LockFree *fa = new Memory_Allocator_LockFree::FixedBlockAllocator_LockFree();
 
-    std::thread t1(sensor_data_producers::lidar_producers_lf , fa , std::ref(queue) , std::ref(running));
-    std::thread t2(sensor_data_producers::radar_producers_lf , fa , std::ref(queue) , std::ref(running));
-    std::thread t3(sensor_data_producers::camera_producers_lf, fa , std::ref(queue) , std::ref(running));
+    std::thread t1(sensor_data_producers_enhanced::lidar_producers_lf , fa , std::ref(queue) , std::ref(running));
+    std::thread t2(sensor_data_producers_enhanced::radar_producers_lf , fa , std::ref(queue) , std::ref(running));
+    std::thread t3(sensor_data_producers_enhanced::camera_producers_lf, fa , std::ref(queue) , std::ref(running));
     std::thread t4(sensor_data_consumer::consumer_sensor_lf  , fa , std::ref(queue) , std::ref(running));
 
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
