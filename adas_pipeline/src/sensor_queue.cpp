@@ -3,7 +3,7 @@
 bool sensor_queue::push(adas::SensorFrame *frame){
     
     std::lock_guard<std::mutex>lock(mtx);
-    bool result;
+    bool result = true;
 
     if(this->size == capacity){
         std::cout<<"[Error ] : Queue full most stale packet dropped from queue\n";
@@ -14,7 +14,7 @@ bool sensor_queue::push(adas::SensorFrame *frame){
     this->buffer[this->rear] = frame;
     this->size++;
     this->rear = (this->rear + 1) & (capacity - 1);
-    result = true;
+    
     cv.notify_one();
     return result;
 }

@@ -17,7 +17,7 @@ private:
 
     std::atomic<size_t>front_{EMPTY_BUFFER_INDEX_LF};
     std::atomic<size_t>rear_{EMPTY_BUFFER_INDEX_LF};
-    std::atomic<size_t>num_elements{EMPTY_BUFFER_SIZE_LF};
+    std::atomic<size_t>num_elements_{EMPTY_BUFFER_SIZE_LF};
 
 public:
 

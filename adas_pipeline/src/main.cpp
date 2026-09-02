@@ -1,4 +1,5 @@
 #include "sensor_queue.hpp"
+#include "sensor_queue_lockfree.hpp"
 #include "sensor_producers.hpp"
 #include "control_loop.hpp"
 #include "FixedBlockAllocator.hpp"
@@ -40,19 +41,37 @@ int main(){
 
 
 #endif
+
 int main(){
 
     std::atomic<bool>running;
     running.store(true);
 
-    sensor_queue queue;
+        // sensor_queue queue;
+
+        // Memory_Allocator::FixedBlockAllocator *fa = new Memory_Allocator::FixedBlockAllocator();
+
+        // std::thread t1(sensor_data_producers::lidar_producers , fa , std::ref(queue) , std::ref(running));
+        // std::thread t2(sensor_data_producers::radar_producers , fa , std::ref(queue) , std::ref(running));
+        // std::thread t3(sensor_data_producers::camera_producers, fa , std::ref(queue) , std::ref(running));
+        // std::thread t4(sensor_data_consumer::consumer_sensor  , fa , std::ref(queue) , std::ref(running));
+
+        // std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+        // running.store(false);
+
+        // t1.join();
+        // t2.join();
+        // t3.join();
+        // t4.join();
+
+    sensor_queue_lockfree queue;
 
     Memory_Allocator::FixedBlockAllocator *fa = new Memory_Allocator::FixedBlockAllocator();
 
-    std::thread t1(sensor_data_producers::lidar_producers , fa , std::ref(queue) , std::ref(running));
-    std::thread t2(sensor_data_producers::radar_producers , fa , std::ref(queue) , std::ref(running));
-    std::thread t3(sensor_data_producers::camera_producers, fa , std::ref(queue) , std::ref(running));
-    std::thread t4(sensor_data_consumer::consumer_sensor  , fa , std::ref(queue) , std::ref(running));
+    std::thread t1(sensor_data_producers::lidar_producers_lf , fa , std::ref(queue) , std::ref(running));
+    std::thread t2(sensor_data_producers::radar_producers_lf , fa , std::ref(queue) , std::ref(running));
+    std::thread t3(sensor_data_producers::camera_producers_lf, fa , std::ref(queue) , std::ref(running));
+    std::thread t4(sensor_data_consumer::consumer_sensor_lf  , fa , std::ref(queue) , std::ref(running));
 
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
     running.store(false);
@@ -64,6 +83,5 @@ int main(){
 
     std::cout<<"Graceful shutdown of adas system\n";
     
-
     return 0;
 }
